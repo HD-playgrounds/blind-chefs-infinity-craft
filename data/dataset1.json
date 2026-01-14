@@ -1,0 +1,102 @@
+[
+    {
+        "id": 1,
+        "name": "Water",
+        "type": "ingredient"
+    },
+    {
+        "id": 2,
+        "name": "Flour",
+        "type": "ingredient"
+    },
+    {
+        "id": 3,
+        "name": "Egg",
+        "type": "ingredient"
+    },
+    {
+        "id": 4,
+        "name": "Milk",
+        "type": "ingredient"
+    },
+    {
+        "id": 5,
+        "name": "Meat",
+        "type": "ingredient"
+    },
+    {
+        "id": 6,
+        "name": "Fish",
+        "type": "ingredient"
+    },
+    {
+        "id": 7,
+        "name": "Rice",
+        "type": "ingredient"
+    },
+    {
+        "id": 8,
+        "name": "Potato",
+        "type": "ingredient"
+    },
+    {
+        "id": 9,
+        "name": "Tomato",
+        "type": "ingredient"
+    },
+    {
+        "id": 10,
+        "name": "Onion",
+        "type": "ingredient"
+    },
+    {
+        "id": 11,
+        "name": "Apple",
+        "type": "ingredient"
+    },
+    {
+        "id": 12,
+        "name": "Sugar",
+        "type": "ingredient"
+    },
+    {
+        "id": 13,
+        "name": "Salt",
+        "type": "ingredient"
+    },
+    {
+        "id": 14,
+        "name": "Oil",
+        "type": "ingredient"
+    },
+    {
+        "id": 15,
+        "name": "Chop",
+        "type": "technique"
+    },
+    {
+        "id": 16,
+        "name": "Fire",
+        "type": "technique"
+    },
+    {
+        "id": 17,
+        "name": "Pot",
+        "type": "technique"
+    },
+    {
+        "id": 18,
+        "name": "Pan",
+        "type": "technique"
+    },
+    {
+        "id": 19,
+        "name": "Oven",
+        "type": "technique"
+    },
+    {
+        "id": 20,
+        "name": "Cold",
+        "type": "technique"
+    }
+]
