@@ -2,101 +2,175 @@
     {
         "id": 1,
         "name": "Water",
-        "type": "ingredient"
+        "type": "ingredient",
+        "icon": "💧"
     },
     {
         "id": 2,
         "name": "Flour",
-        "type": "ingredient"
+        "type": "ingredient",
+        "icon": "🌾"
     },
     {
         "id": 3,
         "name": "Egg",
-        "type": "ingredient"
+        "type": "ingredient",
+        "icon": "🥚"
     },
     {
         "id": 4,
         "name": "Milk",
-        "type": "ingredient"
+        "type": "ingredient",
+        "icon": "🥛"
     },
     {
         "id": 5,
         "name": "Meat",
-        "type": "ingredient"
+        "type": "ingredient",
+        "icon": "🥩"
     },
     {
         "id": 6,
         "name": "Fish",
-        "type": "ingredient"
+        "type": "ingredient",
+        "icon": "🐟"
     },
     {
         "id": 7,
         "name": "Rice",
-        "type": "ingredient"
+        "type": "ingredient",
+        "icon": "🍚"
     },
     {
         "id": 8,
         "name": "Potato",
-        "type": "ingredient"
+        "type": "ingredient",
+        "icon": "🥔"
     },
     {
         "id": 9,
         "name": "Tomato",
-        "type": "ingredient"
+        "type": "ingredient",
+        "icon": "🍅"
     },
     {
         "id": 10,
         "name": "Onion",
-        "type": "ingredient"
+        "type": "ingredient",
+        "icon": "🧅"
     },
     {
         "id": 11,
         "name": "Apple",
-        "type": "ingredient"
+        "type": "ingredient",
+        "icon": "🍎"
     },
     {
         "id": 12,
         "name": "Sugar",
-        "type": "ingredient"
+        "type": "ingredient",
+        "icon": "🍬"
     },
     {
         "id": 13,
         "name": "Salt",
-        "type": "ingredient"
+        "type": "ingredient",
+        "icon": "🧂"
     },
     {
         "id": 14,
         "name": "Oil",
-        "type": "ingredient"
+        "type": "ingredient",
+        "icon": "🛢️"
+    },
+    {
+        "id": 21,
+        "name": "Chicken",
+        "type": "ingredient",
+        "icon": "🍗"
+    },
+    {
+        "id": 22,
+        "name": "Beef",
+        "type": "ingredient",
+        "icon": "🥩"
+    },
+    {
+        "id": 23,
+        "name": "Carrot",
+        "type": "ingredient",
+        "icon": "🥕"
+    },
+    {
+        "id": 24,
+        "name": "Butter",
+        "type": "ingredient",
+        "icon": "🧈"
+    },
+    {
+        "id": 25,
+        "name": "Cheese",
+        "type": "ingredient",
+        "icon": "🧀"
+    },
+    {
+        "id": 26,
+        "name": "Bread",
+        "type": "ingredient",
+        "icon": "🍞"
     },
     {
         "id": 15,
         "name": "Chop",
-        "type": "technique"
+        "type": "technique",
+        "icon": "🔪"
     },
     {
         "id": 16,
         "name": "Fire",
-        "type": "technique"
+        "type": "technique",
+        "icon": "🔥"
     },
     {
         "id": 17,
         "name": "Pot",
-        "type": "technique"
+        "type": "technique",
+        "icon": "🍲"
     },
     {
         "id": 18,
         "name": "Pan",
-        "type": "technique"
+        "type": "technique",
+        "icon": "🍳"
     },
     {
         "id": 19,
         "name": "Oven",
-        "type": "technique"
+        "type": "technique",
+        "icon": "♨️"
     },
     {
         "id": 20,
         "name": "Cold",
-        "type": "technique"
+        "type": "technique",
+        "icon": "❄️"
+    },
+    {
+        "id": 27,
+        "name": "Boil",
+        "type": "technique",
+        "icon": "🥘"
+    },
+    {
+        "id": 28,
+        "name": "Fry",
+        "type": "technique",
+        "icon": "🍤"
+    },
+    {
+        "id": 29,
+        "name": "Bake",
+        "type": "technique",
+        "icon": "🍰"
     }
 ]
