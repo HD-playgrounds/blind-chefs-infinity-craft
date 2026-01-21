@@ -1,22 +1,45 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import dataset from '../data/dataset1.json'
 import { Sidebar } from './components/Sidebar'
 import { GameCanvas } from './components/GameCanvas'
 import type { Ingredient, CanvasElement, DragState } from './types'
 import { DraggableCard } from './components/DraggableCard'
-import { getCombinationResult } from './lib/recipeGraph'
+
+const API_BASE = 'http://localhost:8000'
 
 function App() {
+  const [ingredients, setIngredients] = useState<Ingredient[]>([])
   const [elements, setElements] = useState<CanvasElement[]>([])
   const [dragState, setDragState] = useState<DragState | null>(null)
+  const [discoveredIds, setDiscoveredIds] = useState<number[]>([])
+  const [masteryCounts, setMasteryCounts] = useState<Record<number, number>>({})
+  const [isCombining, setIsCombining] = useState<{ x: number, y: number } | null>(null)
+  const [combiningIds, setCombiningIds] = useState<string[]>([])
+  const [unlockedBaseIds, setUnlockedBaseIds] = useState<number[]>([])
 
-  // Cast the dataset to our type
-  const ingredients = dataset as Ingredient[]
+  // Fetch initial data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const itemsRes = await fetch(`${API_BASE}/items`)
+        const items = await itemsRes.json()
+        setIngredients(items)
+
+        const progRes = await fetch(`${API_BASE}/progression`)
+        const prog = await progRes.json()
+        setDiscoveredIds(prog.discovered_ids)
+        setUnlockedBaseIds(prog.unlocked_base_ids)
+        setMasteryCounts(prog.mastery_counts)
+      } catch (err) {
+        console.error("Failed to fetch data from backend:", err)
+      }
+    }
+    fetchData()
+  }, [])
 
   const handleSidebarDragStart = (e: React.MouseEvent, typeId: number) => {
     e.preventDefault()
-    const rect = (e.target as HTMLElement).getBoundingClientRect()
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
     const offsetX = e.clientX - rect.left
     const offsetY = e.clientY - rect.top
 
@@ -61,102 +84,94 @@ function App() {
       } : null)
     }
 
-    const handleMouseUp = (e: MouseEvent) => {
+    const handleMouseUp = async (e: MouseEvent) => {
       if (!dragState) return
 
       const sidebarWidth = 280
       const dropX = e.clientX
       const dropY = e.clientY
+      
+      const { typeId, startX, startY, isNew, elementId } = dragState
+      const finalX = dropX - sidebarWidth - startX
+      const finalY = dropY - startY
+
+      setDragState(null)
 
       if (dropX > sidebarWidth) {
-        // Correct logic: we want the final Canvas X.
-        // ScreenX = CanvasX + SidebarWidth + GrabOffset
-        // So CanvasX = ScreenX - SidebarWidth - GrabOffset
-        // And currently: ScreenX = dropX. GrabOffset = startX.
-        // Wait, startX IS GrabOffset now.
-        // CanvasX = dropX - sidebarWidth - dragState.startX
-
-        const finalX = dropX - sidebarWidth - dragState.startX
-        const finalY = dropY - dragState.startY
-
-        // Check for combinations
         let combined = false
-        // const droppedRect = { x: finalX, y: finalY, width: 96, height: 128 } // Removed unused
-
-        // Find overlapping element
-        // Filter out the element being dragged if it's not new
-        const candidateElements = dragState.isNew
-          ? elements
-          : elements.filter(el => el.id !== dragState.elementId)
-
-        for (const targetEl of candidateElements) {
-          const targetRect = { x: targetEl.x, y: targetEl.y, width: 96, height: 128 }
-
-          // Simple AABB collision or distance check. Let's use distance for "center" feel or AABB.
-          // Distance between centers often feels better for dropping "on top".
-          const centerX1 = finalX + 48
-          const centerY1 = finalY + 64
-          const centerX2 = targetEl.x + 48
-          const centerY2 = targetEl.y + 64
-          const dist = Math.sqrt(Math.pow(centerX2 - centerX1, 2) + Math.pow(centerY2 - centerY1, 2))
-
-          if (dist < 50) { // Threshold for combination
-            const resultId = getCombinationResult(dragState.typeId, targetEl.typeId)
-            if (resultId) {
-              // COMBINATION!
-              const newElement: CanvasElement = {
-                id: crypto.randomUUID(),
-                typeId: resultId,
-                x: targetEl.x, // Stay at target position
-                y: targetEl.y
-              }
-
-              // Remove target element and add new result
-              // If dragging existing, the previous filter handles it not being in the list if we just setElements from candidateElements filtering target too.
-
-              // We need to carefully construct the new list.
-              // Remove targetEl.
-              // Remove dragged element (if it existed).
-              // Add result.
-
-              // Easier:
-              setElements(prev => {
-                const withoutTarget = prev.filter(el => el.id !== targetEl.id && el.id !== dragState.elementId)
-                return [...withoutTarget, newElement]
-              })
-
-              combined = true
-              break;
+        let targetEl: CanvasElement | undefined = undefined
+        
+        const candidates = isNew ? elements : elements.filter(el => el.id !== elementId)
+        for (const el of candidates) {
+            const cardWidth = 120
+            const cardHeight = 50
+            const rect1 = { x: finalX, y: finalY, w: cardWidth, h: cardHeight }
+            const rect2 = { x: el.x, y: el.y, w: cardWidth, h: cardHeight }
+            if (rect1.x < rect2.x + rect2.w && rect1.x + rect1.w > rect2.x &&
+                rect1.y < rect2.y + rect2.h && rect1.y + rect1.h > rect2.y) {
+                targetEl = el
+                break
             }
-          }
+        }
+
+        if (targetEl) {
+            const sourceId = crypto.randomUUID()
+            setElements(prev => {
+                if (isNew) {
+                    return [...prev, { id: sourceId, typeId, x: finalX, y: finalY }]
+                } else {
+                    return prev.map(el => el.id === elementId ? { ...el, x: finalX, y: finalY } : el)
+                }
+            })
+            
+            const activeSourceId = isNew ? sourceId : elementId!
+            const activeTargetId = targetEl.id
+            
+            setCombiningIds(prev => [...prev, activeSourceId, activeTargetId])
+            setIsCombining({ x: (finalX + targetEl.x) / 2, y: (finalY + targetEl.y) / 2 })
+
+            try {
+                const res = await fetch(`${API_BASE}/combine?source_id=${typeId}&target_id=${targetEl.typeId}`, {
+                    method: 'POST'
+                })
+                const data = await res.json()
+
+                if (data.result_id) {
+                    const resultId = data.result_id
+                    
+                    // Refresh all ingredients to ensure the new one is available in the list
+                    const itemsRes = await fetch(`${API_BASE}/items`)
+                    const items = await itemsRes.json()
+                    setIngredients(items)
+
+                    setDiscoveredIds(prev => prev.includes(resultId) ? prev : [...prev, resultId])
+                    setMasteryCounts(prev => ({ ...prev, [resultId]: data.mastery_count }))
+                    if (data.is_unlocked) setUnlockedBaseIds(prev => prev.includes(resultId) ? prev : [...prev, resultId])
+
+                    setElements(prev => {
+                        const filtered = prev.filter(el => el.id !== activeTargetId && el.id !== activeSourceId)
+                        return [...filtered, { id: crypto.randomUUID(), typeId: resultId, x: targetEl!.x, y: targetEl!.y }]
+                    })
+                    combined = true
+                }
+            } catch (err) {
+                console.error("Combination failed:", err)
+            } finally {
+                setIsCombining(null)
+                setCombiningIds(prev => prev.filter(id => id !== activeSourceId && id !== activeTargetId))
+            }
         }
 
         if (!combined) {
-          if (dragState.isNew) {
-            const newElement: CanvasElement = {
-              id: crypto.randomUUID(),
-              typeId: dragState.typeId,
-              x: finalX,
-              y: finalY
-            }
-            setElements(prev => [...prev, newElement])
-          } else if (dragState.elementId) {
-            setElements(prev => prev.map(el => {
-              if (el.id === dragState.elementId) {
-                return { ...el, x: finalX, y: finalY }
-              }
-              return el
-            }))
+          if (isNew) {
+            setElements(prev => [...prev, { id: crypto.randomUUID(), typeId, x: finalX, y: finalY }])
+          } else if (elementId) {
+            setElements(prev => prev.map(el => el.id === elementId ? { ...el, x: finalX, y: finalY } : el))
           }
         }
-      } else {
-        // If dropped back on sidebar and it was an existing element, delete it
-        if (!dragState.isNew && dragState.elementId) {
-          setElements(prev => prev.filter(el => el.id !== dragState.elementId))
-        }
+      } else if (!isNew && elementId) {
+        setElements(prev => prev.filter(el => el.id !== elementId))
       }
-
-      setDragState(null)
     }
 
     if (dragState) {
@@ -168,13 +183,16 @@ function App() {
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [dragState])
+  }, [dragState, elements, ingredients])
 
   return (
     <div style={{ display: 'flex', width: '100vw', height: '100vh', overflow: 'hidden' }}>
       <Sidebar
         ingredients={ingredients}
         onDragStart={handleSidebarDragStart}
+        discoveredIds={discoveredIds}
+        masteryCounts={masteryCounts}
+        unlockedBaseIds={unlockedBaseIds}
       />
       <GameCanvas
         elements={dragState && !dragState.isNew && dragState.elementId
@@ -183,6 +201,9 @@ function App() {
         }
         ingredients={ingredients}
         onMouseDown={handleCanvasDragStart}
+        dragState={dragState}
+        combiningIds={combiningIds}
+        isCombining={isCombining}
       />
 
       {/* Ghost Element Layer */}

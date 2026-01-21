@@ -1,8 +1,10 @@
 export interface Ingredient {
     id: number;
     name: string;
-    type: 'ingredient' | 'technique';
+    type: 'ingredient' | 'technique' | 'appliance';
     icon: string;
+    isBase?: boolean;
+    directions?: string;
 }
 
 export interface CanvasElement {
