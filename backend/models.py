@@ -7,6 +7,7 @@ class Item(SQLModel, table=True):
     type: str  # ingredient, technique, appliance
     icon: str
     isBase: bool = Field(default=False)
+    tier: int = Field(default=0)
     directions: Optional[str] = None
 
 class Recipe(SQLModel, table=True):

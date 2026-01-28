@@ -5,7 +5,7 @@ from models import Item, Recipe, Progression
 from database import engine, create_db_and_tables
 
 def migrate_items():
-    with open("data/dataset1.json", "r") as f:
+    with open("../data/dataset1.json", "r") as f:
         data = json.load(f)
     
     with Session(engine) as session:
@@ -24,7 +24,7 @@ def migrate_items():
 
 def migrate_recipes():
     # Read recipeGraph.ts to extract patterns
-    with open("src/lib/recipeGraph.ts", "r") as f:
+    with open("../src/lib/recipeGraph.ts", "r") as f:
         content = f.read()
 
     # Extract static recipes
@@ -66,7 +66,7 @@ def migrate_recipes():
 
 def init_progression():
     # Set initial core set as unlocked/mastered if needed, or just discovered
-    core_set = [1, 2, 13, 15, 16, 17, 18, 185]
+    core_set = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 185]
     with Session(engine) as session:
         for item_id in core_set:
             prog = Progression(item_id=item_id, is_discovered=True, is_unlocked=True, mastery_count=0)

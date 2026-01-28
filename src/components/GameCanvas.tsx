@@ -36,8 +36,9 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
             {elements.map((el) => {
                 const ingredient = ingredients.find((i) => i.id === el.typeId);
                 if (!ingredient) return null;
+                if (combiningIds.includes(el.id)) return null;
 
-                const sidebarWidth = 280;
+                const sidebarWidth = 320;
                 const cardWidth = 120;
                 const cardHeight = 50;
 
@@ -72,9 +73,9 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                         className={`spawn-animation ${!ingredient.isBase ? 'llm-generated' : ''} ${combiningIds.includes(el.id) ? 'cooking-item' : ''}`}
                         style={{
                             position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            transform: `translate(${el.x}px, ${el.y}px)`,
+                            top: el.y,
+                            left: el.x,
+                            // transform: `translate(${el.x}px, ${el.y}px)`, // Removed to avoid conflict with animation
                             cursor: 'grab',
                             zIndex: 1,
                         }}

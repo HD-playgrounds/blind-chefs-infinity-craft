@@ -59,7 +59,7 @@ function App() {
     const element = elements.find(el => el.id === elementId)
     if (!element) return
 
-    const sidebarWidth = 280
+      const sidebarWidth = 320
     const offsetX = e.clientX - (element.x + sidebarWidth)
     const offsetY = e.clientY - element.y
 
@@ -87,7 +87,7 @@ function App() {
     const handleMouseUp = async (e: MouseEvent) => {
       if (!dragState) return
 
-      const sidebarWidth = 280
+        const sidebarWidth = 320
       const dropX = e.clientX
       const dropY = e.clientY
 
@@ -114,7 +114,9 @@ function App() {
           }
         }
 
+        let dropped = false
         if (targetEl) {
+          dropped = true
           const sourceId = crypto.randomUUID()
           setElements(prev => {
             if (isNew) {
@@ -162,7 +164,7 @@ function App() {
           }
         }
 
-        if (!combined) {
+        if (!dropped) {
           if (isNew) {
             setElements(prev => [...prev, { id: crypto.randomUUID(), typeId, x: finalX, y: finalY }])
           } else if (elementId) {
@@ -219,6 +221,7 @@ function App() {
           <DraggableCard
             ingredient={ingredients.find(i => i.id === dragState.typeId)!}
             onMouseDown={() => { }}
+            className={!ingredients.find(i => i.id === dragState.typeId)!.isBase ? 'llm-generated' : ''}
             style={{
               boxShadow: 'var(--shadow-hard)',
               transform: 'translate(-1px, -1px)',
