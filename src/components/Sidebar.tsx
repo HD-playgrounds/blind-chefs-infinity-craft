@@ -50,8 +50,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ ingredients, onDragStart, disc
             style={{
                 width: '320px',
                 height: '100vh',
-                backgroundColor: '#121214',
-                borderRight: '1px solid #27272a',
+                backgroundColor: 'var(--color-surface)',
+                borderRight: 'var(--border-width) solid var(--color-border)',
                 padding: '20px',
                 overflowY: 'auto',
                 display: 'flex',
@@ -62,44 +62,48 @@ export const Sidebar: React.FC<SidebarProps> = ({ ingredients, onDragStart, disc
             }}
         >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <h1 style={{ color: '#fff', fontSize: '18px', margin: 0, fontWeight: 700 }}>Kitchen Inventory</h1>
-                
+                <h1 style={{
+                    color: 'var(--color-text)',
+                    fontSize: '24px',
+                    margin: 0,
+                    fontWeight: 500,
+                    letterSpacing: '-0.02em'
+                }}>Kitchen inventory</h1>
+
                 <input
                     type="text"
                     placeholder={`Search ${activeTab}...`}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     style={{
-                        padding: '10px 16px',
-                        backgroundColor: '#1e1e24',
-                        border: '1px solid #3f3f46',
-                        borderRadius: '8px',
-                        color: '#fff',
-                        fontSize: '14px',
+                        padding: '12px 16px',
+                        backgroundColor: 'var(--color-bg)',
+                        border: 'var(--border-width) solid var(--color-border)',
+                        borderRadius: 'var(--border-radius)',
+                        color: 'var(--color-text)',
+                        fontSize: '15px',
                         outline: 'none',
+                        boxShadow: 'none',
+                        fontFamily: 'inherit'
                     }}
                 />
 
-                <div style={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: '1fr 1fr', 
-                    gap: '8px' 
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '8px'
                 }}>
                     {tabs.map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
+                            className="neo-button"
                             style={{
-                                padding: '8px 4px',
-                                backgroundColor: activeTab === tab.id ? '#3b82f6' : '#1e1e24',
-                                border: '1px solid #3f3f46',
-                                borderRadius: '6px',
-                                color: '#fff',
-                                fontSize: '11px',
-                                fontWeight: 600,
-                                cursor: 'pointer',
-                                textTransform: 'uppercase',
-                                transition: 'all 0.2s ease'
+                                padding: '8px 12px',
+                                backgroundColor: activeTab === tab.id ? 'var(--color-text)' : 'var(--color-surface)',
+                                color: activeTab === tab.id ? 'var(--color-surface)' : 'var(--color-text)',
+                                fontSize: '13px',
+                                textTransform: 'none', /* Sentence case/Normal case */
                             }}
                         >
                             {tab.label} {tab.count !== undefined && `(${tab.count})`}
@@ -121,26 +125,34 @@ export const Sidebar: React.FC<SidebarProps> = ({ ingredients, onDragStart, disc
                                                 onDragStart(e, ing.id);
                                             }
                                         }}
-                                        style={activeTab === 'library' && !isMastered(ing.id) ? { 
+                                        style={activeTab === 'library' && !isMastered(ing.id) ? {
                                             cursor: 'help',
-                                            opacity: 0.8,
+                                            opacity: 0.5,
                                             borderStyle: 'dashed'
                                         } : {}}
                                     />
                                     {activeTab === 'library' && (
-                                        <div style={{ fontSize: '12px', color: getMastery(ing.id) >= 5 ? '#10b981' : '#71717a' }}>
+                                        <div style={{
+                                            fontSize: '12px',
+                                            fontWeight: 'bold',
+                                            color: getMastery(ing.id) >= 5 ? 'var(--color-text)' : '#71717a',
+                                            border: '2px solid var(--color-text)',
+                                            padding: '2px 6px',
+                                            backgroundColor: getMastery(ing.id) >= 5 ? '#a7f3d0' : 'transparent'
+                                        }}>
                                             {getMastery(ing.id)}/5
                                         </div>
                                     )}
                                 </div>
                                 {activeTab === 'library' && ing.directions && (
-                                    <div style={{ 
-                                        fontSize: '11px', 
-                                        color: '#94a3b8', 
-                                        padding: '6px 8px', 
-                                        backgroundColor: '#1e1e24', 
-                                        borderRadius: '4px',
-                                        border: '1px solid #334155'
+                                    <div style={{
+                                        fontSize: '11px',
+                                        color: 'var(--color-text)',
+                                        padding: '6px 8px',
+                                        backgroundColor: 'var(--color-bg)',
+                                        borderRadius: '0px',
+                                        border: 'var(--border-width) solid var(--color-border)',
+                                        boxShadow: '2px 2px 0px 0px var(--color-border)'
                                     }}>
                                         📝 {ing.directions}
                                     </div>
@@ -148,16 +160,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ ingredients, onDragStart, disc
                             </div>
                         ))
                     ) : (
-                        <div style={{ 
-                            color: '#71717a', 
-                            fontSize: '13px', 
-                            textAlign: 'center', 
+                        <div style={{
+                            color: 'var(--color-text)',
+                            fontSize: '13px',
+                            textAlign: 'center',
                             width: '100%',
                             marginTop: '40px',
-                            fontStyle: 'italic'
+                            fontWeight: 'bold',
+                            textTransform: 'uppercase'
                         }}>
-                            {activeTab === 'library' && libraryItems.length === 0 
-                                ? "Discover items to fill your library!" 
+                            {activeTab === 'library' && libraryItems.length === 0
+                                ? "Discover items to fill your library!"
                                 : "No items found."}
                         </div>
                     )}
@@ -165,14 +178,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ ingredients, onDragStart, disc
             </div>
 
             {activeTab === 'library' && displayItems.length > 0 && (
-                <div style={{ 
-                    marginTop: 'auto', 
-                    padding: '12px', 
-                    backgroundColor: '#1e1e24', 
-                    borderRadius: '8px',
+                <div style={{
+                    marginTop: 'auto',
+                    padding: '12px',
+                    backgroundColor: 'var(--color-bg)',
+                    borderRadius: '0px',
                     fontSize: '12px',
-                    color: '#94a3b8',
-                    border: '14px solid #334155'
+                    color: 'var(--color-text)',
+                    border: 'var(--border-width) solid var(--color-border)',
+                    boxShadow: 'var(--shadow-hard)',
+                    fontWeight: 600
                 }}>
                     💡 Reach 5 mastery to unlock an item for direct use in the kitchen.
                 </div>

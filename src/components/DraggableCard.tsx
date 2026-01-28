@@ -22,30 +22,31 @@ export const DraggableCard: React.FC<DraggableCardProps> = ({
             className={`draggable-card ${className || ''}`}
             style={{
                 padding: '10px 16px',
-                backgroundColor: ingredient.isBase ? '#ffffff' : '#f0f0f0', // White for base, light gray for complex
+                backgroundColor: ingredient.isBase ? '#ffffff' : '#f4f4f5',
                 border: 'var(--border-width) solid var(--color-border)',
-                borderRadius: '0px',
+                borderRadius: 'var(--border-radius)',
                 color: 'var(--color-text)',
                 userSelect: 'none',
                 cursor: 'grab',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '8px',
-                fontSize: '14px',
-                fontWeight: 700,
+                gap: '10px',
+                fontSize: '15px',
+                fontWeight: 500,
+                fontFamily: 'DM Sans, sans-serif',
                 boxShadow: isHighlight
-                    ? '8px 8px 0px 0px var(--color-text)'
-                    : '4px 4px 0px 0px var(--color-text)',
-                transform: isHighlight ? 'translate(-2px, -2px)' : 'none',
-                transition: 'all 0.1s ease-in-out',
+                    ? 'var(--shadow-hard)'
+                    : 'none',
+                transform: isHighlight ? 'translate(-1px, -1px)' : 'none',
+                transition: 'all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                 width: 'fit-content',
                 ...style,
             }}
         >
-            <span style={{ fontSize: '18px' }}>
+            <span style={{ fontSize: '20px' }}>
                 {ingredient.icon}
             </span>
-            {ingredient.name}
+            {ingredient.name.toLowerCase()}
         </div>
     );
 };

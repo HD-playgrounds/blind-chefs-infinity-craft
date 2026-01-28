@@ -90,7 +90,7 @@ function App() {
       const sidebarWidth = 280
       const dropX = e.clientX
       const dropY = e.clientY
-      
+
       const { typeId, startX, startY, isNew, elementId } = dragState
       const finalX = dropX - sidebarWidth - startX
       const finalY = dropY - startY
@@ -100,66 +100,66 @@ function App() {
       if (dropX > sidebarWidth) {
         let combined = false
         let targetEl: CanvasElement | undefined = undefined
-        
+
         const candidates = isNew ? elements : elements.filter(el => el.id !== elementId)
         for (const el of candidates) {
-            const cardWidth = 120
-            const cardHeight = 50
-            const rect1 = { x: finalX, y: finalY, w: cardWidth, h: cardHeight }
-            const rect2 = { x: el.x, y: el.y, w: cardWidth, h: cardHeight }
-            if (rect1.x < rect2.x + rect2.w && rect1.x + rect1.w > rect2.x &&
-                rect1.y < rect2.y + rect2.h && rect1.y + rect1.h > rect2.y) {
-                targetEl = el
-                break
-            }
+          const cardWidth = 120
+          const cardHeight = 50
+          const rect1 = { x: finalX, y: finalY, w: cardWidth, h: cardHeight }
+          const rect2 = { x: el.x, y: el.y, w: cardWidth, h: cardHeight }
+          if (rect1.x < rect2.x + rect2.w && rect1.x + rect1.w > rect2.x &&
+            rect1.y < rect2.y + rect2.h && rect1.y + rect1.h > rect2.y) {
+            targetEl = el
+            break
+          }
         }
 
         if (targetEl) {
-            const sourceId = crypto.randomUUID()
-            setElements(prev => {
-                if (isNew) {
-                    return [...prev, { id: sourceId, typeId, x: finalX, y: finalY }]
-                } else {
-                    return prev.map(el => el.id === elementId ? { ...el, x: finalX, y: finalY } : el)
-                }
-            })
-            
-            const activeSourceId = isNew ? sourceId : elementId!
-            const activeTargetId = targetEl.id
-            
-            setCombiningIds(prev => [...prev, activeSourceId, activeTargetId])
-            setIsCombining({ x: (finalX + targetEl.x) / 2, y: (finalY + targetEl.y) / 2 })
-
-            try {
-                const res = await fetch(`${API_BASE}/combine?source_id=${typeId}&target_id=${targetEl.typeId}`, {
-                    method: 'POST'
-                })
-                const data = await res.json()
-
-                if (data.result_id) {
-                    const resultId = data.result_id
-                    
-                    // Refresh all ingredients to ensure the new one is available in the list
-                    const itemsRes = await fetch(`${API_BASE}/items`)
-                    const items = await itemsRes.json()
-                    setIngredients(items)
-
-                    setDiscoveredIds(prev => prev.includes(resultId) ? prev : [...prev, resultId])
-                    setMasteryCounts(prev => ({ ...prev, [resultId]: data.mastery_count }))
-                    if (data.is_unlocked) setUnlockedBaseIds(prev => prev.includes(resultId) ? prev : [...prev, resultId])
-
-                    setElements(prev => {
-                        const filtered = prev.filter(el => el.id !== activeTargetId && el.id !== activeSourceId)
-                        return [...filtered, { id: crypto.randomUUID(), typeId: resultId, x: targetEl!.x, y: targetEl!.y }]
-                    })
-                    combined = true
-                }
-            } catch (err) {
-                console.error("Combination failed:", err)
-            } finally {
-                setIsCombining(null)
-                setCombiningIds(prev => prev.filter(id => id !== activeSourceId && id !== activeTargetId))
+          const sourceId = crypto.randomUUID()
+          setElements(prev => {
+            if (isNew) {
+              return [...prev, { id: sourceId, typeId, x: finalX, y: finalY }]
+            } else {
+              return prev.map(el => el.id === elementId ? { ...el, x: finalX, y: finalY } : el)
             }
+          })
+
+          const activeSourceId = isNew ? sourceId : elementId!
+          const activeTargetId = targetEl.id
+
+          setCombiningIds(prev => [...prev, activeSourceId, activeTargetId])
+          setIsCombining({ x: (finalX + targetEl.x) / 2, y: (finalY + targetEl.y) / 2 })
+
+          try {
+            const res = await fetch(`${API_BASE}/combine?source_id=${typeId}&target_id=${targetEl.typeId}`, {
+              method: 'POST'
+            })
+            const data = await res.json()
+
+            if (data.result_id) {
+              const resultId = data.result_id
+
+              // Refresh all ingredients to ensure the new one is available in the list
+              const itemsRes = await fetch(`${API_BASE}/items`)
+              const items = await itemsRes.json()
+              setIngredients(items)
+
+              setDiscoveredIds(prev => prev.includes(resultId) ? prev : [...prev, resultId])
+              setMasteryCounts(prev => ({ ...prev, [resultId]: data.mastery_count }))
+              if (data.is_unlocked) setUnlockedBaseIds(prev => prev.includes(resultId) ? prev : [...prev, resultId])
+
+              setElements(prev => {
+                const filtered = prev.filter(el => el.id !== activeTargetId && el.id !== activeSourceId)
+                return [...filtered, { id: crypto.randomUUID(), typeId: resultId, x: targetEl!.x, y: targetEl!.y }]
+              })
+              combined = true
+            }
+          } catch (err) {
+            console.error("Combination failed:", err)
+          } finally {
+            setIsCombining(null)
+            setCombiningIds(prev => prev.filter(id => id !== activeSourceId && id !== activeTargetId))
+          }
         }
 
         if (!combined) {
@@ -220,9 +220,12 @@ function App() {
             ingredient={ingredients.find(i => i.id === dragState.typeId)!}
             onMouseDown={() => { }}
             style={{
-              boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
-              scale: '1.05',
-              cursor: 'grabbing'
+              boxShadow: 'var(--shadow-hard)',
+              transform: 'translate(-1px, -1px)',
+              cursor: 'grabbing',
+              backgroundColor: 'var(--color-surface)',
+              border: 'var(--border-width) solid var(--color-border)',
+              borderRadius: 'var(--border-radius)',
             }}
           />
         </div>

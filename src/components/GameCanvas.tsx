@@ -6,18 +6,18 @@ interface GameCanvasProps {
     elements: CanvasElement[];
     ingredients: Ingredient[];
     onMouseDown: (e: React.MouseEvent, elementId: string) => void;
-    dragState: any; 
+    dragState: any;
     combiningIds?: string[];
     isCombining: { x: number, y: number } | null;
 }
 
-export const GameCanvas: React.FC<GameCanvasProps> = ({ 
-    elements, 
-    ingredients, 
-    onMouseDown, 
-    dragState, 
+export const GameCanvas: React.FC<GameCanvasProps> = ({
+    elements,
+    ingredients,
+    onMouseDown,
+    dragState,
     combiningIds = [],
-    isCombining 
+    isCombining
 }) => {
     return (
         <div
@@ -25,12 +25,12 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
             style={{
                 flex: 1,
                 position: 'relative',
-                backgroundColor: '#0c0c0e',
-                backgroundImage: 'radial-gradient(circle at center, #1a1a1f 0%, #0c0c0e 100%)',
-                overflow: 'hidden',
-                userSelect: 'none',
+                backgroundColor: 'var(--color-bg)',
+                backgroundImage: 'radial-gradient(var(--color-border) 2px, transparent 2px)',
                 backgroundSize: '40px 40px',
                 backgroundPosition: '-19px -19px',
+                overflow: 'hidden',
+                userSelect: 'none',
             }}
         >
             {elements.map((el) => {
@@ -84,9 +84,39 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
 
             {/* Loading Portal - Relative to Canvas */}
             {isCombining && (
-                <div className="loading-portal" style={{ left: isCombining.x + 60, top: isCombining.y + 25 }}>
-                    <div className="loading-circle" />
-                    <div className="loading-text">Cooking...</div>
+                <div className="neo-box" style={{
+                    position: 'absolute',
+                    left: isCombining.x + 60,
+                    top: isCombining.y + 25,
+                    padding: '12px 24px',
+                    zIndex: 100,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '12px',
+                    transform: 'translate(-50%, -50%)',
+                    backgroundColor: 'var(--color-surface)'
+                }}>
+                    <div style={{
+                        width: '24px',
+                        height: '24px',
+                        border: '2px solid var(--color-text)', // Thinner, cleaner
+                        borderTop: '2px solid transparent',
+                        borderRadius: '50%',
+                        animation: 'spin 0.8s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite' // Smoother spin
+                    }} />
+                    <div style={{
+                        fontWeight: 500,
+                        fontSize: '14px',
+                        letterSpacing: '-0.01em',
+                        fontFamily: 'DM Sans, sans-serif'
+                    }}>Creating masterpiece...</div>
+                    <style>{`
+                        @keyframes spin {
+                            0% { transform: rotate(0deg); }
+                            100% { transform: rotate(360deg); }
+                        }
+                    `}</style>
                 </div>
             )}
         </div>
