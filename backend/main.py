@@ -32,7 +32,7 @@ def read_items(session: Session = Depends(get_session)):
 
 # Expanded CORE_SET to give more variety at start
 CORE_SET = [
-    1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 21, 23, 24, 25, 40, 41, 48, 52, 200, 201, 202, # Ingredients
+    1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 21, 23, 24, 25, 40, 41, 48, 52, # Ingredients
     15, 16, 185, 186, 187, 188, 189, # Techniques
     17, 18, 19, 20, 190, 191 # Appliances
 ]

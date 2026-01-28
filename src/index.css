@@ -1,11 +1,35 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Typography */
+  font-family: 'Courier New', Courier, monospace;
+  /* Monospaced for that raw feel, or keep Inter if preferred but bold */
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #0c0c0e;
+  /* Colors - Neobrutalistic Monochrome */
+  --color-bg: #e0e0e0;
+  /* Light grey background for contrast with black elements */
+  --color-surface: #ffffff;
+  /* White surface */
+  --color-text: #000000;
+  /* Black text */
+  --color-border: #000000;
+  /* Black border */
+
+  /* Accents (Monochrome-ish) */
+  --color-accent-hover: #000000;
+  --color-text-hover: #ffffff;
+
+  /* Layout */
+  --border-width: 3px;
+  --border-radius: 0px;
+  /* Sharp corners */
+  --shadow-hard: 5px 5px 0px 0px var(--color-border);
+  --shadow-hard-hover: 2px 2px 0px 0px var(--color-border);
+
+  /* Base settings */
+  color-scheme: light;
+  color: var(--color-text);
+  background-color: var(--color-bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -19,6 +43,10 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(var(--color-border) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 #root {
@@ -27,4 +55,33 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* Utility classes for Neobrutalism */
+.neo-box {
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  box-shadow: var(--shadow-hard);
+  color: var(--color-text);
+}
+
+.neo-button {
+  cursor: pointer;
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  box-shadow: var(--shadow-hard);
+  color: var(--color-text);
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: all 0.1s ease-in-out;
+}
+
+.neo-button:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-hard-hover);
+}
+
+.neo-button:active {
+  transform: translate(5px, 5px);
+  box-shadow: none;
 }

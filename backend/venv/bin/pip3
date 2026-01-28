@@ -1,4 +1,6 @@
-#!/Users/hengliu/Developer/Projects/blind-chefs-infinity-craft/backend/venv/bin/python3
+#!/bin/sh
+'''exec' "/Users/dollarzhu/Projects/Blind Chefs/blind-chefs-infinity-craft/backend/venv/bin/python3" "$0" "$@"
+' '''
 # -*- coding: utf-8 -*-
 import re
 import sys

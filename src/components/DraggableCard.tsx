@@ -21,23 +21,23 @@ export const DraggableCard: React.FC<DraggableCardProps> = ({
             onMouseDown={onMouseDown}
             className={`draggable-card ${className || ''}`}
             style={{
-                padding: '12px 20px',
-                backgroundColor: ingredient.isBase ? '#1e1e24' : '#312e81', // Indigo for complex items
-                borderRadius: '50px',
-                color: '#fff',
+                padding: '10px 16px',
+                backgroundColor: ingredient.isBase ? '#ffffff' : '#f0f0f0', // White for base, light gray for complex
+                border: 'var(--border-width) solid var(--color-border)',
+                borderRadius: '0px',
+                color: 'var(--color-text)',
                 userSelect: 'none',
                 cursor: 'grab',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
                 fontSize: '14px',
-                fontWeight: 500,
-                boxShadow: isHighlight 
-                    ? '0 0 20px 5px rgba(255, 215, 0, 0.6), 0 4px 6px rgba(0, 0, 0, 0.1)' 
-                    : '0 4px 6px rgba(0, 0, 0, 0.1)',
-                border: isHighlight ? '1px solid #fbbf24' : '1px solid #3f3f46',
-                transform: isHighlight ? 'scale(1.05)' : 'scale(1)',
-                transition: 'all 0.2s ease',
+                fontWeight: 700,
+                boxShadow: isHighlight
+                    ? '8px 8px 0px 0px var(--color-text)'
+                    : '4px 4px 0px 0px var(--color-text)',
+                transform: isHighlight ? 'translate(-2px, -2px)' : 'none',
+                transition: 'all 0.1s ease-in-out',
                 width: 'fit-content',
                 ...style,
             }}

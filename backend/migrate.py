@@ -15,7 +15,7 @@ def migrate_items():
                 name=item_data["name"],
                 type=item_data["type"],
                 icon=item_data["icon"],
-                is_base=item_data.get("isBase", False),
+                isBase=item_data.get("isBase", False),
                 directions=item_data.get("directions")
             )
             session.add(item)
