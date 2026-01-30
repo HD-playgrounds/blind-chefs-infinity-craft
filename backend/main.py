@@ -100,7 +100,7 @@ async def combine_items(source_id: int, target_id: int, session: Session = Depen
     # 3. If no recipe exists, call LM Studio
     if not recipes:
         logger.info(f"No recipe found for {source_item.name} + {target_item.name}. Generating with LLM...")
-        outcomes = await get_culinary_outcomes(source_item.name, target_item.name)
+        outcomes = await get_culinary_outcomes(source_item.name, source_item.type, target_item.name, target_item.type)
         
         if outcomes:
             # Create new items and recipes

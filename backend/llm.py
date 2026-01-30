@@ -7,47 +7,45 @@ from typing import List, Dict, Optional
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 # LM Studio default is often 1234, but we'll make it configurable
 LM_STUDIO_BASE_URL = "http://localhost:1234/v1"
 
-async def get_culinary_outcomes(source_name: str, target_name: str) -> List[Dict[str, str]]:
+async def get_culinary_outcomes(source_name: str, source_type: str, target_name: str, target_type: str) -> List[Dict[str, str]]:
     """
     Asks LM Studio to provide the best culinary outcome for combining two items.
     Returns a list with a single dictionary containing 'name', 'directions', and 'icon'.
     """
     prompt = f"""You are a Master Chef in a realistic cooking game.
-The player is combining: "{source_name}" and "{target_name}. First determine if the two ingredients will generate a successful mix.
-We will have ingredients and cooking techniques, if no technique is applied, assume that it is uncooked.
-If not, return 'garbage' as the name, 'You failed to create a successful mix.' as the directions, and '🗑️' as the icon.
-If so, provide the single best, most creative and logical culinary outcome that results from this combination. Be realistic.
-Provide:
-1. A short name (1-3 words).
-2. A brief set of directions (1 sentence).
-3. A single emoji that represents the dish.
+The player is combining:
+1. "{source_name}" (Type: {source_type})
+2. "{target_name}" (Type: {target_type})
+
+Determine the result of this combination.
+
+Rules:
+1. **Technique Requirement**: If neither item is a "technique" (and neither is an Appliance acting as one), the dish is generally **uncooked** or a simple mixture.
+   - Exception: "Water" + "Flour" -> "Dough" (valid mixture).
+   - "Chicken" + "Beef" -> "Garbage" (invalid raw mix).
+2. **Success Validation**: If the combination makes no culinary sense or yields an inedible/failed mess, return "garbage".
+3. **Self-Referentiality**: A recipe can result in one of the inputs if it makes sense (e.g., washing/prepping).
+   - Example: "Water" + "Fish" -> "Fish" (Washed Fish). 
+   - Example: "Chop" + "Carrot" -> "Chopped Carrot" (if one is a tool/technique).
+4. **Garbage Output**: If failed, set name="garbage", directions="You failed...", icon="🗑️".
 
 Format your response as a JSON object:
 {{"name": "Dish Name", "directions": "Brief instructions...", "icon": "emoji"}}
 
-Rules:
-- Be creative but logical.
-- The results should be culinary in nature (dishes, sauces, prepared ingredients, or techniques).
-- Return ONLY the JSON object.
+Examples:
+- Input: "Water" (ingredient) + "Fish" (ingredient)
+  Output: {{"name": "Fish", "directions": "You washed the fish.", "icon": "🐟"}}
+- Input: "Chicken Thigh" (ingredient) + "Roast" (technique)
+  Output: {{"name": "Roast Chicken", "directions": "Roasted until golden brown.", "icon": "🍗"}}
+- Input: "Chicken Thigh" (ingredient) + "Beef Tenderloin" (ingredient)
+  Output: {{"name": "garbage", "directions": "Raw meat pile. Not successful.", "icon": "🗑️"}}
 
-Important:
-- Make sure we validate if the dish is successful or not. If not, return 'garbage' as the name, 'You failed to create a successful mix.' as the directions, and '🗑️' as the icon.
-- If the dish is successful, return the name of the dish, the directions, and the icon.
-- If there is no cooking technique such as "bake", "fry", assume the dish is not cooked.
-
-Example:
-Input: "water" and "fish"
-Output: {{"name": "fish", "directions": "You failed to create a successful mix.", "icon": "🗑️"}}
-
-Input: "water" and "fire"
-Output: {{"name": "steam", "directions": "You successfully created steam.", "icon": "💨"}}
-
+Provide ONLY the JSON object.
 """
-
-
 
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
@@ -77,7 +75,6 @@ Output: {{"name": "steam", "directions": "You successfully created steam.", "ico
                 content = content.split("```")[1].split("```")[0].strip()
             
             outcome = json.loads(content)
-            # Ensure it's returned as a list for compatibility with the existing backend loop
             return [outcome]
 
     except Exception as e:

@@ -453,5 +453,251 @@
         "type": "technique",
         "icon": "",
         "isBase": true
+    },
+    {
+        "id": 51,
+        "name": "Dough",
+        "type": "ingredient",
+        "icon": "dough.png",
+        "isBase": false
+    },
+    {
+        "id": 52,
+        "name": "Bread",
+        "type": "ingredient",
+        "icon": "bread.png",
+        "isBase": false
+    },
+    {
+        "id": 53,
+        "name": "Boiled Pasta",
+        "type": "ingredient",
+        "icon": "boiled_pasta.png",
+        "isBase": false
+    },
+    {
+        "id": 54,
+        "name": "Mac and Cheese",
+        "type": "ingredient",
+        "icon": "mac_and_cheese.png",
+        "isBase": false
+    },
+    {
+        "id": 55,
+        "name": "Boiled Potato",
+        "type": "ingredient",
+        "icon": "boiled_potato.png",
+        "isBase": false
+    },
+    {
+        "id": 56,
+        "name": "Mashed Potato",
+        "type": "ingredient",
+        "icon": "mashed_potato.png",
+        "isBase": false
+    },
+    {
+        "id": 57,
+        "name": "Whisked Eggs",
+        "type": "ingredient",
+        "icon": "whisked_eggs.png",
+        "isBase": false
+    },
+    {
+        "id": 58,
+        "name": "Scrambled Eggs",
+        "type": "ingredient",
+        "icon": "scrambled_eggs.png",
+        "isBase": false
+    },
+    {
+        "id": 59,
+        "name": "Grilled Steak",
+        "type": "ingredient",
+        "icon": "grilled_steak.png",
+        "isBase": false
+    },
+    {
+        "id": 60,
+        "name": "Boiled Chicken",
+        "type": "ingredient",
+        "icon": "boiled_chicken.png",
+        "isBase": false
+    },
+    {
+        "id": 61,
+        "name": "Chicken Soup",
+        "type": "ingredient",
+        "icon": "chicken_soup.png",
+        "isBase": false
+    },
+    {
+        "id": 62,
+        "name": "Chopped Carrot",
+        "type": "ingredient",
+        "icon": "chopped_carrot.png",
+        "isBase": false
+    },
+    {
+        "id": 63,
+        "name": "Chopped Onion",
+        "type": "ingredient",
+        "icon": "chopped_onion.png",
+        "isBase": false
+    },
+    {
+        "id": 64,
+        "name": "Minced Garlic",
+        "type": "ingredient",
+        "icon": "minced_garlic.png",
+        "isBase": false
+    },
+    {
+        "id": 65,
+        "name": "Salted Water",
+        "type": "ingredient",
+        "icon": "salted_water.png",
+        "isBase": false
+    },
+    {
+        "id": 66,
+        "name": "Pizza",
+        "type": "ingredient",
+        "icon": "pizza.png",
+        "isBase": false
+    },
+    {
+        "id": 67,
+        "name": "Burger",
+        "type": "ingredient",
+        "icon": "burger.png",
+        "isBase": false
+    },
+    {
+        "id": 68,
+        "name": "Cheese Sandwich",
+        "type": "ingredient",
+        "icon": "cheese_sandwich.png",
+        "isBase": false
+    },
+    {
+        "id": 69,
+        "name": "Cake",
+        "type": "ingredient",
+        "icon": "cake.png",
+        "isBase": false
+    },
+    {
+        "id": 70,
+        "name": "Fried Rice",
+        "type": "ingredient",
+        "icon": "fried_rice.png",
+        "isBase": false
+    },
+    {
+        "id": 71,
+        "name": "Beef Stew",
+        "type": "ingredient",
+        "icon": "beef_stew.png",
+        "isBase": false
+    },
+    {
+        "id": 72,
+        "name": "Salad",
+        "type": "ingredient",
+        "icon": "salad.png",
+        "isBase": false
+    },
+    {
+        "id": 73,
+        "name": "Sushi",
+        "type": "ingredient",
+        "icon": "sushi.png",
+        "isBase": false
+    },
+    {
+        "id": 74,
+        "name": "Coffee",
+        "type": "ingredient",
+        "icon": "coffee.png",
+        "isBase": false
+    },
+    {
+        "id": 75,
+        "name": "Latte",
+        "type": "ingredient",
+        "icon": "latte.png",
+        "isBase": false
+    },
+    {
+        "id": 76,
+        "name": "Cheese Omelette",
+        "type": "ingredient",
+        "icon": "cheese_omelette.png",
+        "isBase": false
+    },
+    {
+        "id": 77,
+        "name": "Toast",
+        "type": "ingredient",
+        "icon": "toast.png",
+        "isBase": false
+    },
+    {
+        "id": 78,
+        "name": "Avocado Toast",
+        "type": "ingredient",
+        "icon": "avocado_toast.png",
+        "isBase": false
+    },
+    {
+        "id": 79,
+        "name": "Cooked Rice",
+        "type": "ingredient",
+        "icon": "cooked_rice.png",
+        "isBase": false
+    },
+    {
+        "id": 80,
+        "name": "Cake Batter",
+        "type": "ingredient",
+        "icon": "cake_batter.png",
+        "isBase": false
+    },
+    {
+        "id": 81,
+        "name": "Roast Chicken",
+        "type": "ingredient",
+        "icon": "roast_chicken.png",
+        "isBase": false
+    },
+    {
+        "id": 82,
+        "name": "Grilled Salmon",
+        "type": "ingredient",
+        "icon": "grilled_salmon.png",
+        "isBase": false
+    },
+    {
+        "id": 83,
+        "name": "Tomato Sauce",
+        "type": "ingredient",
+        "icon": "tomato_sauce.png",
+        "isBase": false
+    },
+    {
+        "id": 84,
+        "name": "Fried Chicken",
+        "type": "ingredient",
+        "icon": "fried_chicken.png",
+        "isBase": false
+    },
+    {
+        "id": 999,
+        "name": "Garbage",
+        "type": "ingredient",
+        "icon": "🗑️",
+        "isBase": false,
+        "directions": "You failed..."
     }
 ]
