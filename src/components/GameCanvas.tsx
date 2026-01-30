@@ -65,12 +65,13 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                     <DraggableCard
                         key={el.id}
                         ingredient={ingredient}
+                        variant="canvas"
                         onMouseDown={(e) => {
                             if (combiningIds.includes(el.id)) return;
                             onMouseDown(e, el.id);
                         }}
                         isHighlight={isHighlight}
-                        className={`spawn-animation ${!ingredient.isBase ? 'llm-generated' : ''} ${combiningIds.includes(el.id) ? 'cooking-item' : ''}`}
+                        className={`spawn-animation ${combiningIds.includes(el.id) ? 'cooking-item' : ''}`}
                         style={{
                             position: 'absolute',
                             top: el.y,

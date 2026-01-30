@@ -31,11 +31,17 @@ def read_items(session: Session = Depends(get_session)):
     return session.exec(select(Item)).all()
 
 # Expanded CORE_SET to give more variety at start
+
+# Expanded CORE_SET to give more variety at start
 CORE_SET = [
-    1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 21, 23, 24, 25, 40, 41, 48, 52, # Ingredients
-    15, 16, 185, 186, 187, 188, 189, # Techniques
-    17, 18, 19, 20, 190, 191 # Appliances
+    # Ingredients (1-50) - adding a subset or all as core? 
+    # Since dataset1.json has isBase=True for all, they are all unlocked by migrate.py.
+    # We'll list a subset here or just rely on migration. 
+    # But this list forces them if missing. Let's just include the first few and the techniques.
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, # Basics
+    201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215 # Techniques
 ]
+
 
 @app.get("/progression")
 def read_progression(session: Session = Depends(get_session)):

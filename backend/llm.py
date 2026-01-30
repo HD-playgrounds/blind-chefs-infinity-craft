@@ -15,10 +15,11 @@ async def get_culinary_outcomes(source_name: str, target_name: str) -> List[Dict
     Asks LM Studio to provide the best culinary outcome for combining two items.
     Returns a list with a single dictionary containing 'name', 'directions', and 'icon'.
     """
-    prompt = f"""You are a Master Chef in a magical multi-verse cooking game.
-The player is combining: "{source_name}" and "{target_name}".
-
-Provide the single best, most creative and logical culinary outcome that results from this combination.
+    prompt = f"""You are a Master Chef in a realistic cooking game.
+The player is combining: "{source_name}" and "{target_name}. First determine if the two ingredients will generate a successful mix.
+We will have ingredients and cooking techniques, if no technique is applied, assume that it is uncooked.
+If not, return 'garbage' as the name, 'You failed to create a successful mix.' as the directions, and '🗑️' as the icon.
+If so, provide the single best, most creative and logical culinary outcome that results from this combination. Be realistic.
 Provide:
 1. A short name (1-3 words).
 2. A brief set of directions (1 sentence).
@@ -31,7 +32,22 @@ Rules:
 - Be creative but logical.
 - The results should be culinary in nature (dishes, sauces, prepared ingredients, or techniques).
 - Return ONLY the JSON object.
+
+Important:
+- Make sure we validate if the dish is successful or not. If not, return 'garbage' as the name, 'You failed to create a successful mix.' as the directions, and '🗑️' as the icon.
+- If the dish is successful, return the name of the dish, the directions, and the icon.
+- If there is no cooking technique such as "bake", "fry", assume the dish is not cooked.
+
+Example:
+Input: "water" and "fish"
+Output: {{"name": "fish", "directions": "You failed to create a successful mix.", "icon": "🗑️"}}
+
+Input: "water" and "fire"
+Output: {{"name": "steam", "directions": "You successfully created steam.", "icon": "💨"}}
+
 """
+
+
 
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:

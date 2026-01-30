@@ -59,7 +59,7 @@ function App() {
     const element = elements.find(el => el.id === elementId)
     if (!element) return
 
-      const sidebarWidth = 320
+    const sidebarWidth = 320
     const offsetX = e.clientX - (element.x + sidebarWidth)
     const offsetY = e.clientY - element.y
 
@@ -87,7 +87,7 @@ function App() {
     const handleMouseUp = async (e: MouseEvent) => {
       if (!dragState) return
 
-        const sidebarWidth = 320
+      const sidebarWidth = 320
       const dropX = e.clientX
       const dropY = e.clientY
 
@@ -220,9 +220,12 @@ function App() {
         }}>
           <DraggableCard
             ingredient={ingredients.find(i => i.id === dragState.typeId)!}
+            variant={!dragState.isNew ? 'canvas' : 'default'}
             onMouseDown={() => { }}
-            className={!ingredients.find(i => i.id === dragState.typeId)!.isBase ? 'llm-generated' : ''}
-            style={{
+            className={dragState.isNew && !ingredients.find(i => i.id === dragState.typeId)!.isBase ? 'llm-generated' : ''}
+            style={!dragState.isNew ? {
+              cursor: 'grabbing'
+            } : {
               boxShadow: 'var(--shadow-hard)',
               transform: 'translate(-1px, -1px)',
               cursor: 'grabbing',
