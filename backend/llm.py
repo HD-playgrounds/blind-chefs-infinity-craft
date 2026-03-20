@@ -1,22 +1,27 @@
-import httpx
 import json
 import logging
-from typing import List, Dict, Optional
+import os
+from typing import List, Dict
 
-# Configure logging
+from dotenv import load_dotenv
+from openai import AsyncOpenAI
+
+load_dotenv()
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+_client = AsyncOpenAI(api_key=os.environ["OPEN_AI_API_KEY"])
 
-# LM Studio default is often 1234, but we'll make it configurable
-LM_STUDIO_BASE_URL = "http://localhost:1234/v1"
+MODEL = "gpt-4o-mini"
+
 
 async def get_culinary_outcomes(source_name: str, source_type: str, target_name: str, target_type: str) -> List[Dict[str, str]]:
     """
-    Asks LM Studio to provide the best culinary outcome for combining two items.
+    Asks OpenAI to provide the best culinary outcome for combining two items.
     Returns a list with a single dictionary containing 'name', 'directions', and 'icon'.
     """
-    prompt = f"""You are a Master Chef in a realistic cooking game.
+    prompt = f"""You are a creative Master Chef in a realistic cooking game.
 The player is combining:
 1. "{source_name}" (Type: {source_type})
 2. "{target_name}" (Type: {target_type})
@@ -24,14 +29,18 @@ The player is combining:
 Determine the result of this combination.
 
 Rules:
-1. **Technique Requirement**: If neither item is a "technique" (and neither is an Appliance acting as one), the dish is generally **uncooked** or a simple mixture.
-   - Exception: "Water" + "Flour" -> "Dough" (valid mixture).
-   - "Chicken" + "Beef" -> "Garbage" (invalid raw mix).
-2. **Success Validation**: If the combination makes no culinary sense or yields an inedible/failed mess, return "garbage".
+1. **Be Creative and Generous**: Most ingredient combinations have a valid culinary result — mixing, marinating, enriching, coating, folding, etc. Lean toward finding a valid output.
+   - "Dough" + "Egg" -> "Egg Dough" (enriched pasta dough — totally valid).
+   - "Water" + "Flour" -> "Dough" (valid mixture).
+   - "Flour" + "Butter" -> "Shortcrust" (valid mixture).
+2. **Technique amplifies**: If one item is a technique or appliance, the result is a cooked/processed version of the other.
+   - "Chicken Thigh" + "Roast" -> "Roast Chicken".
 3. **Self-Referentiality**: A recipe can result in one of the inputs if it makes sense (e.g., washing/prepping).
-   - Example: "Water" + "Fish" -> "Fish" (Washed Fish). 
-   - Example: "Chop" + "Carrot" -> "Chopped Carrot" (if one is a tool/technique).
-4. **Garbage Output**: If failed, set name="garbage", directions="You failed...", icon="🗑️".
+   - "Water" + "Fish" -> "Fish" (Washed Fish).
+4. **Garbage only for truly nonsensical combos**: Only return garbage if there is genuinely no culinary logic — e.g., two incompatible raw proteins with no binding purpose, or completely unrelated items.
+   - "Chicken" + "Beef" -> "Garbage" (pointless raw meat mix).
+   - If in doubt, find a creative result instead of garbage.
+5. **Garbage Output**: If failed, set name="garbage", directions="You failed...", icon="🗑️".
 
 Format your response as a JSON object:
 {{"name": "Dish Name", "directions": "Brief instructions...", "icon": "emoji"}}
@@ -39,6 +48,8 @@ Format your response as a JSON object:
 Examples:
 - Input: "Water" (ingredient) + "Fish" (ingredient)
   Output: {{"name": "Fish", "directions": "You washed the fish.", "icon": "🐟"}}
+- Input: "Dough" (ingredient) + "Egg" (ingredient)
+  Output: {{"name": "Egg Dough", "directions": "Enriched dough with egg — perfect for fresh pasta.", "icon": "🍝"}}
 - Input: "Chicken Thigh" (ingredient) + "Roast" (technique)
   Output: {{"name": "Roast Chicken", "directions": "Roasted until golden brown.", "icon": "🍗"}}
 - Input: "Chicken Thigh" (ingredient) + "Beef Tenderloin" (ingredient)
@@ -48,35 +59,29 @@ Provide ONLY the JSON object.
 """
 
     try:
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.post(
-                f"{LM_STUDIO_BASE_URL}/chat/completions",
-                json={
-                    "messages": [
-                        {"role": "system", "content": "You are a helpful assistant that only outputs short, concise JSON."},
-                        {"role": "user", "content": prompt}
-                    ],
-                    "temperature": 0.7,
-                    "max_tokens": 150,
-                }
-            )
-            
-            if response.status_code != 200:
-                logger.error(f"LM Studio returned status {response.status_code}: {response.text}")
-                return []
+        logger.info(f"LLM Request - Combining: '{source_name}' ({source_type}) + '{target_name}' ({target_type})")
+        response = await _client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that only outputs short, concise JSON."},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.7,
+            max_tokens=150,
+        )
 
-            result = response.json()
-            content = result["choices"][0]["message"]["content"]
-            
-            # Extract JSON if the model included prose (safety)
-            if "```json" in content:
-                content = content.split("```json")[1].split("```")[0].strip()
-            elif "```" in content:
-                content = content.split("```")[1].split("```")[0].strip()
-            
-            outcome = json.loads(content)
-            return [outcome]
+        content = response.choices[0].message.content or ""
+        logger.info(f"LLM Response raw content: {content}")
+
+        # Strip markdown code fences if present
+        if "```json" in content:
+            content = content.split("```json")[1].split("```")[0].strip()
+        elif "```" in content:
+            content = content.split("```")[1].split("```")[0].strip()
+
+        outcome = json.loads(content)
+        return [outcome]
 
     except Exception as e:
-        logger.error(f"Error calling LM Studio: {e}")
+        logger.error(f"Error calling OpenAI: {e}")
         return []
